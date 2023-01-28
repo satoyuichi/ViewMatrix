@@ -3,5 +3,9 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: default
-permalink: /
 ---
+<script>
+	{% include main.js %}
+</script>
+<div id="canvas">
+</div>
