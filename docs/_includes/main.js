@@ -17,21 +17,34 @@ window.onload = (event) => {
   initProjectionMatrix();
   initGui();
   initControllers();
-  
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
   const canvas = document.getElementById("canvas");
+
+  const scene = new THREE.Scene();
+  // const camera = new THREE.PerspectiveCamera( 75, canvas.clientWidth / window.innerHeight, 0.1, 1000 );
+  const camera = new THREE.Camera();
+  camera.matrixWorld = new THREE.Matrix4();
+  camera.modelViewMatrix.lookAt(
+    new THREE.Vector3( 0.0, 0.0, 5.0 ),
+    new THREE.Vector3( 0.0, 0.0, 0.0 ),
+    new THREE.Vector3( 0.0, 1.0, 0.0 ),
+  );
+  camera.projectionMatrix = new THREE.Matrix4();
+
   const renderer = new THREE.WebGLRenderer();
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setSize( canvas.clientWidth, window.innerHeight );
   canvas.appendChild( renderer.domElement );
 
   const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-  const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+
+  const material = new THREE.ShaderMaterial( {
+    uniforms: {},
+    vertexShader: document.getElementById( 'vertexshader' ).textContent,
+    fragmentShader: document.getElementById( 'fragmentshader' ).textContent
+  } );
+
   const cube = new THREE.Mesh( geometry, material );
   scene.add( cube );
-
-  camera.position.z = 5;
 
   function animate() {
     requestAnimationFrame( animate );
@@ -54,7 +67,7 @@ function initProjectionMatrix() {
   const l = 0.0;
   const t = 0.0;
   const b = h;
-  
+
   matrix.m11 = (2.0 * n) / (r - l);
   matrix.m21 = 0.0;
   matrix.m31 = 0.0;
@@ -64,7 +77,7 @@ function initProjectionMatrix() {
   matrix.m22 = (2.0 * n) / (t - b);
   matrix.m32 = 0.0;
   matrix.m42 = 0.0;
-  
+
   matrix.m13 = (r + l) / (r - l);
   matrix.m23 = (t + b) / (t - b);
   matrix.m33 = -(f + n) / (f - n);
@@ -107,7 +120,7 @@ function initGui() {
   gui = new GUI();
 
   gui.add( guiSetting, 'reset' );
-  
+
   const colaum1 = gui.addFolder( 'Colaum 1' );
   controllers.m11 = colaum1.add( matrix, 'm11', -10, 10);
   controllers.m21 = colaum1.add( matrix, 'm21', -10, 10);

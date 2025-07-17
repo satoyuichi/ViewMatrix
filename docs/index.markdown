@@ -4,6 +4,14 @@
 
 layout: default
 ---
+<script type="x-shader/x-vertex" id="vertexshader">
+	{% include vertex.vert %}
+</script>
+
+<script type="x-shader/x-fragment" id="fragmentshader">
+	{% include fragment.frag %}
+</script>
+
 <script>
 	{% include main.js %}
 </script>
